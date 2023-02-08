@@ -1,10 +1,11 @@
-import Footer from './components/layout/Footer'
-import useLocalStorage from './hooks/useLocalStorage'
-import Form from './components/Form'
-import UsersList from './components/usersList'
-
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
+
+import useLocalStorage from './hooks/useLocalStorage'
+import Home from './pages/Home'
+import Form from './components/Form'
+import UsersList from './components/usersList'
+import Footer from './layout/Footer'
 
 function App () {
   const [users, setUsers] = useLocalStorage('userlist', [])
@@ -26,6 +27,8 @@ function App () {
     }
   }
 
+  // delete users
+
   const deleteItemFromList = (id) => {
     setUsers(
       users.filter((item, index) => {
@@ -37,6 +40,7 @@ function App () {
   return (
     <>
         <Routes>
+          <Route path='/' element={<Home />} />
           <Route path='/register' element={<Form submitUser={addUser} usersCount={users.length}/>} />
           <Route path='/users' element={<UsersList userList={users} deleteUser={deleteItemFromList}/>} />
         </Routes>

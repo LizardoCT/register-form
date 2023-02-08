@@ -1,5 +1,5 @@
-import logofooter from '../../assets/logo-footer.png'
-import pci from '../../assets/pci.png'
+import logofooter from '../assets/logo-footer.png'
+import pci from '../assets/pci.png'
 
 const Footer = () => {
   return (

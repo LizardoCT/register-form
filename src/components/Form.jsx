@@ -1,13 +1,13 @@
 import { useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-// import { FcCheckmark } from 'react-icons/fc'
 import Swal from 'sweetalert2'
-import Nav from './layout/Nav'
+import Nav from '../layout/Nav'
 
 function Form (client) {
   const [user, setUser] = useState({})
 
+  // params from react-hook-form
   const { register, handleSubmit, watch, formState: { errors } } = useForm({
     defaultValues: {
       'personal.docType': 'DNI'
@@ -15,6 +15,7 @@ function Form (client) {
     mode: 'onBlur'
   })
 
+  // data from forms and validation of number of users
   const onSubmit = (data, e) => {
     if (client.usersCount === 4) return Swal.fire('Usuarios completos')
     setUser(data)
@@ -35,13 +36,20 @@ function Form (client) {
     }
   }, [user])
 
+  // function to submite new user
   function submitingUser (user) {
     client.submitUser(user)
     Swal.fire('Registro exitoso.')
     navigate('/users')
   }
 
-  const [optionState] = useState('Número de ')
+  // regex validation for each option
+  const documentTypeWatch = watch('documentType')
+  const documentValidations = {
+    DNI: /^[0-9]{8}$/i,
+    'Carné de extranjería': /^[a-zA-Z0-9]{9}$/i,
+    Pasaporte: /^[0-9]{9}$/i
+  }
 
   return (
     <>
@@ -58,7 +66,7 @@ function Form (client) {
           className={errors.personal_firstName ? 'hover:ring-inset hover:ring-1 hover:ring-red-700 border-[1px] focus:outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700 focus:ring-inset border-red-700 w-full py-3 pl-3 rounded-md  text-gray-600 px-1 outline-none mb-6' : 'hover:ring-inset hover:ring-1 hover:ring-blue-900 border-[1px] focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 focus:ring-inset w-full py-3 pl-3 rounded-md border-gray-400 text-gray-600 px-1 outline-none mb-6'} type="text"
             {...register('personal_firstName', {
               required: { value: true, message: 'Este campo es requerido' },
-              pattern: { value: /^[a-zA-Z ]|['.ñ]+$/i, message: 'Ingrese un nombre válido' }
+              pattern: { value: /^[ A-Za-zá-ú.']*$/i, message: 'Ingrese un nombre válido' }
             })}/>
           {errors?.personal_firstName && (<p className="error">{errors.personal_firstName.message}</p>)}
         </div>
@@ -69,14 +77,15 @@ function Form (client) {
           className={errors.personal_lastName ? 'hover:ring-inset hover:ring-1 hover:ring-red-700 border-[1px] focus:outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700 focus:ring-inset border-red-700 w-full py-3 pl-3 rounded-md  text-gray-600 px-1 outline-none mb-6' : 'hover:ring-inset hover:ring-1 hover:ring-blue-900 border-[1px] focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 focus:ring-inset w-full py-3 pl-3 rounded-md border-gray-400 text-gray-600 px-1 outline-none mb-6'} type="text"
             {...register('personal_lastName', {
               required: { value: true, message: 'Este campo es requerido' },
-              pattern: { value: /^[a-zA-Z ]|['.ñ]+$/i, message: 'Ingrese un nombre válido' }
+              pattern: { value: /^[ A-Za-zá-ú.']*$/i, message: 'Ingrese un nombre válido' }
             })}/>
           {errors?.personal_lastName && (<p className="error">{errors.personal_lastName.message}</p>)}
         </div>
 
         <div>
           <label className='text-sm text-gray-500 m-3'>País</label>
-          <input placeholder='Ingrese el país' className={errors.personal_country ? 'hover:ring-inset hover:ring-1 hover:ring-red-700 border-[1px] focus:outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700 focus:ring-inset border-red-700 w-full py-3 pl-3 rounded-md  text-gray-600 px-1 outline-none mb-6' : 'hover:ring-inset hover:ring-1 hover:ring-blue-900 border-[1px] focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 focus:ring-inset w-full py-3 pl-3 rounded-md border-gray-400 text-gray-600 px-1 outline-none mb-6'} type="text"
+          <input placeholder='Ingrese el país'
+          className={errors.personal_country ? 'hover:ring-inset hover:ring-1 hover:ring-red-700 border-[1px] focus:outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700 focus:ring-inset border-red-700 w-full py-3 pl-3 rounded-md  text-gray-600 px-1 outline-none mb-6' : 'hover:ring-inset hover:ring-1 hover:ring-blue-900 border-[1px] focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 focus:ring-inset w-full py-3 pl-3 rounded-md border-gray-400 text-gray-600 px-1 outline-none mb-6'} type="text"
             {...register('personal_country', {
               required: { value: true, message: 'Este campo es requerido' },
               pattern: { value: /([a-zA-Z]|[à-ü]|[À-Ü])/g, message: 'Solo caracteres alfabéticos' }
@@ -103,8 +112,8 @@ function Form (client) {
 
         <div>
           <label className='text-sm text-gray-500 m-3'>
-            {optionState}
-            {watch('personal_docType')}
+            {/* {optionState} */}
+            Número de {watch('personal_docType')}
             </label>
           <input
           placeholder='Número de documento'
@@ -113,7 +122,7 @@ function Form (client) {
           {...register('personal_dni', {
             required: { value: true, message: 'Este campo es requerido' },
             pattern: {
-              value: /^[0-9]{7,8}$/i,
+              value: documentValidations[documentTypeWatch],
               message: 'Ingrese un documento válido'
             }
           })}
@@ -123,7 +132,7 @@ function Form (client) {
           )}
         </div>
 
-        <input className='bg-red-600 w-full font-bold text-lg text-gray-100 py-4 my-6 rounded-lg hover:bg-red-500 transition-colors' type="submit" value='Registrar' />
+        <button className='bg-red-600 w-full font-bold text-lg text-gray-100 py-4 my-6 rounded-lg hover:bg-red-500 transition-colors' type="submit">Registrar</button>
         </form>
     </div>
     </>
