@@ -1,9 +1,10 @@
+import Footer from './components/layout/Footer'
 import useLocalStorage from './hooks/useLocalStorage'
 import Form from './components/Form'
-import Nav from './components/Nav'
 import UsersList from './components/usersList'
+
 import { useState } from 'react'
-import { HashRouter as Router, Routes, Route, NavLink } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 
 function App () {
   const [users, setUsers] = useLocalStorage('userlist', [])
@@ -11,7 +12,7 @@ function App () {
 
   function addUser (user) {
     const isANewUser = users.findIndex((alreadyUser) => {
-      return user.personal.dni === alreadyUser.personal.dni
+      return user.personal_dni === alreadyUser.personal_dni
     })
 
     if (isANewUser > -1) {
@@ -34,29 +35,13 @@ function App () {
   }
 
   return (
-    <div>
-      <Router>
-        <Nav />
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <NavLink exact to="/" style={{ margin: '50px' }}>
-            Registrar
-          </NavLink>
-          <NavLink exact to="/users" style={{ margin: '50px' }}>
-            Ver registro
-          </NavLink>
-        </div>
+    <>
         <Routes>
-          <Route exact path="/" element={<Form submitUser={addUser} />}></Route>
-          <Route
-            exact
-            path="/users"
-            element={
-              <UsersList userList={users} deleteUser={deleteItemFromList} />
-            }
-          ></Route>
+          <Route path='/register' element={<Form submitUser={addUser} usersCount={users.length}/>} />
+          <Route path='/users' element={<UsersList userList={users} deleteUser={deleteItemFromList}/>} />
         </Routes>
-      </Router>
-    </div>
+      <Footer />
+    </>
   )
 }
 

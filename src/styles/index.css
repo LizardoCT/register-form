@@ -12,9 +12,10 @@
 }
 
 .error {
-  color: red;
+  color: #B30F3B;
   font-size: 12px;
-  margin: 0;
+  margin-left: 12px;
+  margin-top: -18px;
 }
 
 input::-webkit-outer-spin-button,
@@ -23,7 +24,10 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-select {
-  /* appearance: none; */
-  outline: none !important;
+.swal2-styled.swal2-confirm {
+  background-color: #8d1031 !important;
+}
+.swal2-title{
+  font-weight: 100 !important;
+  font-style: italic;
 }

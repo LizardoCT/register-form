@@ -1,19 +1,31 @@
 import { useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 // import { FcCheckmark } from 'react-icons/fc'
+import Swal from 'sweetalert2'
+import Nav from './layout/Nav'
 
 function Form (client) {
   const [user, setUser] = useState({})
 
-  const { register, handleSubmit, formState: { errors } } = useForm()
+  const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    defaultValues: {
+      'personal.docType': 'DNI'
+    },
+    mode: 'onBlur'
+  })
 
   const onSubmit = (data, e) => {
+    if (client.usersCount === 4) return Swal.fire('Usuarios completos')
     setUser(data)
     setUser((prevValue) => ({
       ...prevValue
     }))
     e.target.reset()
   }
+
+  // redirect to register
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (Object.entries(user).length === 0) {
@@ -23,91 +35,98 @@ function Form (client) {
     }
   }, [user])
 
-  // function mappeId () {
-  //   switch (register.docType) {
-  //     case 'DNI':
-  //       return /^[0-9]{7,8}$/i
-  //     case 'CE':
-  //       return /^[0-9]{7,8}$/i
-  //   }
-  // }
-
   function submitingUser (user) {
     client.submitUser(user)
-    alert('Registro exitoso')
+    Swal.fire('Registro exitoso.')
+    navigate('/users')
   }
 
-  return (
-    <div className='flex items-center justify-center flex-col pt-10'>
-      <h2 className='text-2xl pb-9 italic'>Registro de Pasajeros</h2>
-      <p className='text-gray-500 text-sm pb-6'>Registro máximo de 4 pasajeros</p>
+  const [optionState] = useState('Número de ')
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+  return (
+    <>
+      <Nav />
+    <div className='flex items-center justify-center flex-col pt-12'>
+      <h2 className='text-2xl pb-4 italic'>Registro de Pasajeros</h2>
+      <p className='text-gray-500 text-sm pb-9'>Registro máximo de 4 pasajeros</p>
+
+        <form className='w-[35rem] max-sm:w-80 md:max-xl:w-80' onSubmit={handleSubmit(onSubmit)} >
+
         <div>
-          <label className='text-sm text-gray-500 m-3'>Nombres</label>
-          <input className='w-full py-3 pl-3 rounded-md bg-gray-100 text-gray-600 px-1 outline-none mb-4' type="text"
-            {...register('personal.firstName', {
-              required: { value: true, message: 'This field is required' },
-              pattern: { value: /^[a-zA-Z ]+$/i, message: 'Please enter a valid name' }
+          <label className='text-sm text-gray-500 m-3'>Nombre(s)</label>
+          <input placeholder='Ingrese el o los nombres'
+          className={errors.personal_firstName ? 'hover:ring-inset hover:ring-1 hover:ring-red-700 border-[1px] focus:outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700 focus:ring-inset border-red-700 w-full py-3 pl-3 rounded-md  text-gray-600 px-1 outline-none mb-6' : 'hover:ring-inset hover:ring-1 hover:ring-blue-900 border-[1px] focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 focus:ring-inset w-full py-3 pl-3 rounded-md border-gray-400 text-gray-600 px-1 outline-none mb-6'} type="text"
+            {...register('personal_firstName', {
+              required: { value: true, message: 'Este campo es requerido' },
+              pattern: { value: /^[a-zA-Z ]|['.ñ]+$/i, message: 'Ingrese un nombre válido' }
             })}/>
-          {errors?.personal?.firstName && (<p className="error">{errors.personal.firstName.message}</p>)}
+          {errors?.personal_firstName && (<p className="error">{errors.personal_firstName.message}</p>)}
         </div>
 
         <div>
           <label className='text-sm text-gray-500 m-3'>Apellidos</label>
-          <input className='w-full py-3 pl-3 rounded-md bg-gray-100 text-gray-600 px-1 outline-none mb-4' type="text"
-            {...register('personal.lastName', {
-              required: { value: true, message: 'This field is required' },
-              pattern: { value: /^[a-zA-Z ]+$/i, message: 'Please enter a valid name' }
+          <input placeholder='Ingrese los apellidos'
+          className={errors.personal_lastName ? 'hover:ring-inset hover:ring-1 hover:ring-red-700 border-[1px] focus:outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700 focus:ring-inset border-red-700 w-full py-3 pl-3 rounded-md  text-gray-600 px-1 outline-none mb-6' : 'hover:ring-inset hover:ring-1 hover:ring-blue-900 border-[1px] focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 focus:ring-inset w-full py-3 pl-3 rounded-md border-gray-400 text-gray-600 px-1 outline-none mb-6'} type="text"
+            {...register('personal_lastName', {
+              required: { value: true, message: 'Este campo es requerido' },
+              pattern: { value: /^[a-zA-Z ]|['.ñ]+$/i, message: 'Ingrese un nombre válido' }
             })}/>
-          {errors?.personal?.lastName && (<p className="error">{errors.personal.lastName.message}</p>)}
+          {errors?.personal_lastName && (<p className="error">{errors.personal_lastName.message}</p>)}
         </div>
 
         <div>
           <label className='text-sm text-gray-500 m-3'>País</label>
-          <input className='w-full py-3 pl-3 rounded-md bg-gray-100 text-gray-600 px-1 outline-none mb-4' type="text"
-            {...register('personal.country', {
-              required: { value: true, message: 'This field is required' },
-              pattern: { value: /([a-zA-Z]|[à-ü]|[À-Ü])/g, message: 'Solo carácteres alfabéticos' }
+          <input placeholder='Ingrese el país' className={errors.personal_country ? 'hover:ring-inset hover:ring-1 hover:ring-red-700 border-[1px] focus:outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700 focus:ring-inset border-red-700 w-full py-3 pl-3 rounded-md  text-gray-600 px-1 outline-none mb-6' : 'hover:ring-inset hover:ring-1 hover:ring-blue-900 border-[1px] focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 focus:ring-inset w-full py-3 pl-3 rounded-md border-gray-400 text-gray-600 px-1 outline-none mb-6'} type="text"
+            {...register('personal_country', {
+              required: { value: true, message: 'Este campo es requerido' },
+              pattern: { value: /([a-zA-Z]|[à-ü]|[À-Ü])/g, message: 'Solo caracteres alfabéticos' }
             })}/>
-          {errors?.personal?.country && (<p className="error">{errors.personal.country.message}</p>)}
+          {errors?.personal_country && (<p className="error">{errors.personal_country.message}</p>)}
         </div>
 
         <div>
           <label className='text-sm text-gray-500 m-3'>Tipo de documento</label>
-          <select className='w-full py-3 pl-3 rounded-md bg-gray-100 text-gray-600 px-1 outline-none mb-4' type="text"
-            {...register('personal.docType', {
+          <select
+          className={errors.personal_docType ? 'hover:ring-inset hover:ring-1 hover:ring-red-700 border-[1px] focus:outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700 focus:ring-inset border-red-700 w-full py-3 pl-3 rounded-md  text-gray-600 px-1 outline-none mb-6' : 'hover:ring-inset hover:ring-1 hover:ring-blue-900 border-[1px] focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 focus:ring-inset w-full py-3 pl-3 rounded-md border-gray-400 text-gray-600 px-1 outline-none mb-6'}
+            {...register('personal_docType', {
               required: { value: true, message: 'Este campo es requerido.' }
             })} >
-              <option value=''>Seleccionar...</option>
+              {/* <option value=''>Seleccionar...</option> */}
               <option value="DNI">DNI</option>
-              <option value="CE">CE</option>
+              <option value="Carné de extranjería">Carné de extranjería</option>
               <option value="Pasaporte">Pasaporte</option>
             </select>
-          {errors?.personal?.docType && (
-            <p className="error">{errors.personal.docType.message}</p>
+          {errors?.personal_docType && (
+            <p className="error">{errors.personal_docType.message}</p>
           )}
         </div>
 
         <div>
-          <label className='text-sm text-gray-500 m-3'>Número de documento</label>
-          <input className='w-full py-3 pl-3 rounded-md bg-gray-100 text-gray-600 px-1 outline-none mb-4' type="text"
-            {...register('personal.dni', {
-              required: { value: true, message: 'This field is required' },
-              pattern: {
-                value: /^[0-9]{7,8}$/i,
-                message: 'Please enter a valid document'
-              }
-            })}
+          <label className='text-sm text-gray-500 m-3'>
+            {optionState}
+            {watch('personal_docType')}
+            </label>
+          <input
+          placeholder='Número de documento'
+          className={errors.personal_dni ? 'hover:ring-inset hover:ring-1 hover:ring-red-700 border-[1px] focus:outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700 focus:ring-inset border-red-700 w-full py-3 pl-3 rounded-md  text-gray-600 px-1 outline-none mb-6' : 'hover:ring-inset hover:ring-1 hover:ring-blue-900 border-[1px] focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 focus:ring-inset w-full py-3 pl-3 rounded-md border-gray-400 text-gray-600 px-1 outline-none mb-6'}
+          type="text"
+          {...register('personal_dni', {
+            required: { value: true, message: 'Este campo es requerido' },
+            pattern: {
+              value: /^[0-9]{7,8}$/i,
+              message: 'Ingrese un documento válido'
+            }
+          })}
           />
-          {errors?.personal?.dni && (
-            <p className="error">{errors.personal.dni.message}</p>
+          {errors?.personal_dni && (
+            <p className="error">{errors.personal_dni.message}</p>
           )}
         </div>
 
-        <input className='bg-red-600 w-full font-bold text-lg text-gray-100 py-4 my-10 rounded-lg hover:bg-red-500 transition-colors' type="submit" value='Registrar' />
+        <input className='bg-red-600 w-full font-bold text-lg text-gray-100 py-4 my-6 rounded-lg hover:bg-red-500 transition-colors' type="submit" value='Registrar' />
         </form>
     </div>
+    </>
   )
 }
 
