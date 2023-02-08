@@ -4,7 +4,7 @@ import { Routes, Route } from 'react-router-dom'
 import useLocalStorage from './hooks/useLocalStorage'
 import Home from './pages/Home'
 import Form from './components/Form'
-import UsersList from './components/usersList'
+import UsersList from './components/UsersList'
 import Footer from './layout/Footer'
 
 function App () {
