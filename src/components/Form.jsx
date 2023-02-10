@@ -10,7 +10,7 @@ function Form (client) {
   // params from react-hook-form
   const { register, handleSubmit, watch, formState: { errors } } = useForm({
     defaultValues: {
-      'personal.docType': 'DNI'
+      personal_docType: 'DNI'
     },
     mode: 'onBlur'
   })
@@ -100,7 +100,6 @@ function Form (client) {
             {...register('personal_docType', {
               required: { value: true, message: 'Este campo es requerido.' }
             })} >
-              {/* <option value=''>Seleccionar...</option> */}
               <option value="DNI">DNI</option>
               <option value="Carné de extranjería">Carné de extranjería</option>
               <option value="Pasaporte">Pasaporte</option>
