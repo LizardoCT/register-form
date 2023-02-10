@@ -44,7 +44,7 @@ function Form (client) {
   }
 
   // regex validation for each option
-  const documentTypeWatch = watch('documentType')
+  const documentTypeWatch = watch('personal_docType')
   const documentValidations = {
     DNI: /^[0-9]{8}$/i,
     'Carné de extranjería': /^[a-zA-Z0-9]{9}$/i,
@@ -112,7 +112,6 @@ function Form (client) {
 
         <div>
           <label className='text-sm text-gray-500 m-3'>
-            {/* {optionState} */}
             Número de {watch('personal_docType')}
             </label>
           <input
