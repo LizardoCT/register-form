@@ -1,6 +1,6 @@
 # Register Form
 
-Registration app form validating certain requirements with ReactJS using localStorage
+Register Form app with dinamic regex validations that uses localStorage and shows registered users.
 ## Demo
 
 https://register-form-nene.vercel.app/
