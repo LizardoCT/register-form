@@ -1,9 +1,13 @@
 # Register Form
 
+NOTE: This site is a clone website. It is not the real, official site. Its purpose is to look like the official site for practice purposes. This site is not for active use. Do NOT enter your credentials or share any personal information.
+
 Registration app form validating certain requirements with ReactJS using localStorage
+
 ## Demo
 
 https://register-form-nene.vercel.app/
+
 ## Stack
 
 - React JS
@@ -38,7 +42,6 @@ Start the server
 ```bash
   npm run dev
 ```
-
 
 ## Screenshots
 
