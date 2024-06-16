@@ -1,5 +1,7 @@
 # Register Form
 
+NOTE: This site is a clone website. It is not the real, official site. Its purpose is to look like the official site for practice purposes. This site is not for active use. Do NOT enter your credentials or share any personal information.
+
 Register Form app with dinamic regex validations that uses localStorage and shows registered users.
 
 ## Demo
