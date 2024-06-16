@@ -45,4 +45,4 @@ Start the server
 
 ## Screenshots
 
-![registerForm](https://user-images.githubusercontent.com/102773606/217575300-c0400e37-6161-4675-836d-9d59d5b6a605.png)
+![screencapture-localhost-5173-register-2024-06-15-22_46_47](https://github.com/LizardoCT/register-form/assets/102773606/64fc9af4-fa2c-4d3f-9635-204f1b8b1a9a)
